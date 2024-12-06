@@ -1,1 +1,2 @@
 it's an int sorting algortihm, probably use std::list or std::deque
+ - adviced to use either vector, list or deque
