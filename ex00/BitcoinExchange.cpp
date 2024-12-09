@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:57:10 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/09 10:49:05 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/09 15:15:53 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@ int    invalid_date(std::string date, bool print) {
         }
         i++;
     }
+    if (std::atoi(date.substr(0, 4).c_str()) < 2009
+        || std::atoi(date.substr(0, 4).c_str()) > 2024
+        || std::atoi(date.substr(6, 8).c_str()) > 12
+        || date.substr(6,8) == "00"
+        || std::atoi((date.substr(9,11)).c_str()) > 31
+        || date.substr(9,11) == "00")
+    {
+        if (print)
+            std::cout << "Error: bad input => " << date << "\n";
+        return (1);
+    }
+
     return 0;
 }
 
@@ -90,7 +102,7 @@ int invalid_entry(std::string line, std::string *date, float *value, std::string
         return 1;
     }
     *value = std::atof(valueString.c_str());
-    if (*value >= std::numeric_limits<int>::max()) {
+    if (print && *value > 1000) {
         std::cout << "Error: too large a number\n";
         return 1;
     }
@@ -133,6 +145,11 @@ void    BitcoinExchange::print_map() {
     }
 }
 
+void    calculate_bitcoin(std::map<std::string, float>::iterator iterator, std::string date, float value) {
+    float calc = iterator->second * value;
+    std::cout << date << " => " << value << " = "  << calc << "\n";    
+}
+
 void BitcoinExchange::handle_input(char *input) {
     std::fstream    file;
     std::string     line;
@@ -158,16 +175,17 @@ void BitcoinExchange::handle_input(char *input) {
             else {
                 iterator = _map.find(date);
                 if (iterator != _map.end()) {
-                    float calc = iterator->second * value;
-                    std::cout << date << " => " << value << " = "  << calc << "\n";
+                    calculate_bitcoin(iterator, date, value);
                 }
                 else {
-                    std::cout << "Error: bad input => " << date << "\n";
+                    iterator = _map.lower_bound(date);
+                    if (iterator != _map.begin())
+                        iterator--;
+                    calculate_bitcoin(iterator, iterator->first, value);
                 }
             }
         }
-    }
-        
+    }   
 }
 
 BitcoinExchange::BitcoinExchange(std::string filename) {

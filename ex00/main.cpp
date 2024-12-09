@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:50:37 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/09 10:25:30 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:47:58 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int main(int argc, char **argv) {
     
     try {
         BitcoinExchange btc("data.csv");
-        // btc.print_map();
         btc.handle_input(argv[1]);
     }
     catch (std::exception &e) {
