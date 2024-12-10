@@ -3,4 +3,4 @@ Then build linked lists with each node containnig the calculation to make:
     - first already has calculation
     - next is performed on before, etc
 
-    Adviced to use stack for push operations
+    Adviced to use stack for push operations --> use stack of char c, use static_convert to change to int

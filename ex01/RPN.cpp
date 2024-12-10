@@ -23,7 +23,7 @@ int invalid_token(char c, std::string set) {
     return (1);
 }
 
-int invalid_input(char *input, std::stack<int> *stackDigits, std::stack<char> *stackTokens) {
+int invalid_input(char *input, std::stack<char> *stackElements) {
     std::string tokens = "+-/*";
     
     if (input[0] ==  '\0'){
@@ -31,8 +31,6 @@ int invalid_input(char *input, std::stack<int> *stackDigits, std::stack<char> *s
         return 1;
     }
     
-    (void)stackDigits;
-    (void)stackTokens;
     
     /* Check first 2 digits */
     if (!std::isdigit(input[0]) || !std::isdigit(input[2])) {
@@ -42,7 +40,8 @@ int invalid_input(char *input, std::stack<int> *stackDigits, std::stack<char> *s
     
     /* Check Spaces between elements */
     for (int i = 0; input[i]; i++) {
-        if (i%2 != 0 && input[i] != ' '){
+        if ((i%2 != 0 && input[i] != ' ')
+            || (input[i] != ' ' && invalid_token(input[i], tokens) && !isdigit(input[i]))){
             std::cout << "Error " << input[i] << "\n";
             return 1;
         }
@@ -59,23 +58,90 @@ int invalid_input(char *input, std::stack<int> *stackDigits, std::stack<char> *s
             return 1;
     }
 
-    /* Check Tokens positions */
-    for (int i = 0; input[i] && i < size; i += 4) {
-        if (i >= 4 && invalid_token(input[i], tokens)){
-            std::cout << "Error " << input[i] << "\n";
+    /* Check if valid tokens */
+    for (int i = 0; input[i]; i++) {
+        if (!isdigit(input[i]) && input[i] != ' ' && invalid_token(input[i], tokens)) {
+            std::cout << "Error\n";
             return 1;
         }
     }
-    
+
+    for (int i = size--; input[i]; i--) {
+        if (input[i] != ' ')
+            (*stackElements).push(input[i]);
+    }
+
+    // while (!(*stackElements).empty()) {
+    //     std::cout << "Element = " << (*stackElements).top() << "\n";
+    //     (*stackElements).pop();
+    // }
     return 0;
 }
 
+/*
+    $> ./RPN "8 9 * 9 - 9 - 9 - 4 - 1 +"
+    42
+    $> ./RPN "7 7 * 7 -"
+    42
+    $> ./RPN "1 2 * 2 / 2 * 2 4 - +"
+    0
+    $> ./RPN "(1 + 1)"
+    Error
+
+*/
+
+void    perform_calculations(size_t *result, size_t left, size_t right, char oper) {
+    switch (oper) {
+        case '*':
+            *result = left * right;
+            std::cout << *result << "\n";
+            break;
+        // default:
+            
+    }
+
+
+}
+
 void    rpn(char *input) {
-    std::stack<int>     stackDigits;
-    std::stack<char>    stackTokens;
-      
-    if (invalid_input(input, &stackDigits, &stackTokens))
+    std::stack<char>     stackElements;
+    size_t  left;
+    size_t  right;  
+    char  oper;
+
+    size_t result;
+
+    if (invalid_input(input, &stackElements))
         return ;
-    
+
+    left = stackElements.top();
+    stackElements.pop();
+    right = stackElements.top();
+    stackElements.pop();
+    oper = stackElements.top();
+    stackElements.pop();
+    perform_calculations(&result, left, right, oper);
+    while (!stackElements.empty()) {
+        if (isdigit(stackElements.top())) {
+            right = stackElements.top();
+            stackElements.pop();
+
+            if (isdigit(stackElements.top())) {
+                left = right;
+                right = stackElements.top();
+                stackElements.pop();
+            }
+            else 
+                left = result;
+        }
+        if (invalid_token(stackElements.top(), "+-/*")) {
+            std::cout << "Error\n";
+        }
+        oper = stackElements.top();
+        stackElements.pop();
         
+        perform_calculations(&result, left, right, oper);
+    }
+    
+    std::cout << result << "\n";
 }
