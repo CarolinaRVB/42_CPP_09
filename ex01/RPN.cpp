@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:24:33 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/09 17:00:06 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:11:23 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,42 @@ int invalid_input(char *input, std::stack<char> *stackElements) {
 
 */
 
+/*
+    Using static_casts
+    Behavior:
+    This is the modern C++ way of performing a cast.
+    It explicitly specifies that this is a static conversion at compile-time (no runtime overhead).
+    
+    Advantages:
+    Clearer intent: It tells the reader and the compiler what kind of cast is being performed.
+    Safer: The compiler checks if the cast is valid and appropriate (e.g., you cannot accidentally 
+    static_cast incompatible types like a pointer to an unrelated type).
+    Consistent with C++'s philosophy of type safety.
+
+*/
+
 void    perform_calculations(size_t *result, size_t left, size_t right, char oper) {
     switch (oper) {
         case '*':
-            *result = left * right;
-            std::cout << *result << "\n";
+            *result = right * left;
+            std::cout << "Calculate: " << right << " * " << left << " = " << *result << "\n";
             break;
-        // default:
-            
+        case '-':
+            *result = right - left;
+            std::cout << "Calculate: " << right << " - " << left << " = " << *result << "\n";
+            break;
+        case '+':
+            *result = right + left;
+            std::cout << "Calculate: " << right << " + " << left << " = " << *result << "\n";
+
+            break;
+        case '/':
+            *result = right / left;
+            std::cout << "Calculate: " << right << " / " << left << " = " << *result << "\n";
+
+        default:
+            break;            
     }
-
-
 }
 
 void    rpn(char *input) {
@@ -114,32 +139,37 @@ void    rpn(char *input) {
     if (invalid_input(input, &stackElements))
         return ;
 
-    left = stackElements.top();
+    left = static_cast<size_t>(stackElements.top() - '0');
     stackElements.pop();
-    right = stackElements.top();
+    right = static_cast<size_t>(stackElements.top() - '0');
     stackElements.pop();
     oper = stackElements.top();
     stackElements.pop();
     perform_calculations(&result, left, right, oper);
     while (!stackElements.empty()) {
         if (isdigit(stackElements.top())) {
-            right = stackElements.top();
+            left = static_cast<size_t>(stackElements.top() - '0');
             stackElements.pop();
 
             if (isdigit(stackElements.top())) {
-                left = right;
-                right = stackElements.top();
+                right = left;
+                left = static_cast<size_t>(stackElements.top() - '0');
                 stackElements.pop();
+                oper = stackElements.top();
+                stackElements.pop();
+                size_t tmp;
+                perform_calculations(&tmp, left, right, oper);
+                left = tmp;
             }
-            else 
-                left = result;
+            else{ 
+                right = result;
+            }
         }
-        if (invalid_token(stackElements.top(), "+-/*")) {
+        if (invalid_token(stackElements.top(), "+-/*"))
             std::cout << "Error\n";
-        }
+       
         oper = stackElements.top();
-        stackElements.pop();
-        
+        stackElements.pop(); 
         perform_calculations(&result, left, right, oper);
     }
     
