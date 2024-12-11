@@ -1,6 +1,6 @@
-NAME := RPN
+NAME := PmergeMe
 
-SRC := 	RPN.cpp \
+SRC := 	PmergeMe.cpp \
 		main.cpp
 
 OBJ := $(SRC:.cpp=.o)
@@ -17,7 +17,7 @@ $(OBJ): %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	@echo "$(GREEN) Compiling ex01 ... "
+	@echo "$(GREEN) Compiling ex02 ... "
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 	@echo "$(GREEN) Done! "
 
