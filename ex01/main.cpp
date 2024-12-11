@@ -13,10 +13,19 @@
 # include "RPN.hpp"
 
 int main(int argc, char **argv) {
+    std::stack<char>     stackElements;
+    
     if (argc == 1){
         std::cout << "Error: no arguments provided\n";
         return 1;
     }
-    rpn(argv[1]);
+
+    try {
+        validate_input(argv[1], &stackElements);
+        rpn(stackElements);
+    }
+    catch (std::exception &e) {
+        std::cout << e.what() << "\n";
+    }
     return 0;
 }
