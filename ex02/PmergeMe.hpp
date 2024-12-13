@@ -16,7 +16,8 @@
 # include <iostream>
 # include <vector>
 # include <cstdlib>
-
+# include <algorithm>
+# include <limits>
 
 /*
 What is Ford-Johnson with Jacobsthal?
