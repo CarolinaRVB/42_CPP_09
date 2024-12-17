@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:39 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/13 19:50:41 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/17 16:20:44 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <iomanip>
 # include <list>
 # include <deque>
+# include <ctime>
+
 
 /*
 What is Ford-Johnson with Jacobsthal?

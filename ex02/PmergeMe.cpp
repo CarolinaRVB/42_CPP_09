@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/13 19:52:35 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/17 16:40:36 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,3 +203,4 @@ void    binary_insertion_vector(std::vector<int> *sequence, std::vector<int> *pe
         sequence->insert(iter, (*pend)[i]);
     }
 }
+ 

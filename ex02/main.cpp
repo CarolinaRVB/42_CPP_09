@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:35 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/13 19:57:19 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/17 16:42:24 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "PmergeMe.hpp"
-
-long    getMicros() {
-    struct timeval time;
-    gettimeofday(&time, NULL);
-    return time.tv_sec * 1000000L + time.tv_usec;
-}
 
 int invalid_input(char **arg) {
     for (int i = 1; arg[i]; i++) {
@@ -32,15 +26,15 @@ template <typename T>
 void    print_nums(T nums, long unsigned int len, std::string message) {
     std::cout << message << " ";
 
-    unsigned long int max = len;
-    if (max > 5) {
-        max = 5;
-    }
-    for (unsigned long int i = 0; i < max; i++) {
+    // unsigned long int max = len;
+    // if (max > 5) {
+    //     max = 5;
+    // }
+    for (unsigned long int i = 0; i < len; i++) {
         std::cout << nums[i] << " ";
     }
-    if (max != len)
-        std::cout << "[...]";
+    // if (max != len)
+    //     std::cout << "[...]";
     std::cout << std::endl;
 }
 
@@ -103,20 +97,20 @@ int main(int argc, char **argv) {
     // Sorting Nums with a VECTOR container
     std::vector<int>                    sequence;
 
-    long startVec = getMicros();
+    clock_t startVec = clock();
     if (sort_vector(argc, argv, &sequence) != 0)
         return 1;
-    long endVec = getMicros();
-    double timeVec = static_cast<double>(endVec - startVec); 
+    clock_t endVec = clock();
+    double timeVec = static_cast<double>(endVec - startVec) / 1000; 
 
     // Sorting Nums with a DEQUE container
     std::deque<int>                    sequenceD;
     
-    long startD = getMicros();    
+    clock_t startD = clock();   
     if (sort_deque(argc, argv, &sequenceD) != 0)
         return 1;    
-    long endD = getMicros();
-    double timeD = static_cast<double>(endD - startD); 
+    clock_t endD = clock();
+    double timeD = static_cast<double>(endD - startD) / 1000; 
 
     // Show final results
     print_result(argc, argv, &sequence, timeVec, timeD);
