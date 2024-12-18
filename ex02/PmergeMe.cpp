@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/17 16:40:36 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/18 14:41:57 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,17 @@ void    swap_largest_vector(std::vector<std::vector<int> > *intMatrix) {
     std::sort(intMatrix->begin(), intMatrix->end(), compareLargest_vector);
 }
 
+/*
+    Here we go through the jacobsthal sequence
+    We get the current index on the jacobsthal
+    Then we check if that index is in the bounds of the main vector container and if it's not a repeated index like in the case of the '1'
+        Then we go to that index on our main vector container and we get the smallest value (not yet sorted)
+        We find the lower_bound on our sequence vector - here it's empty in the beginning ?? and we insert the smaller values
+        THen the bigger values are directly inserted on the pend ???
+        
+        Then the remaining elements on the vector that weren't appended are added to the end of the pend vector 
+        here a simple check is done to skip the indexes that correspond to the jacobstal
+*/
 void    get_smallest_based_on_jacobsthall_vector(std::vector<std::vector<int> > *intMatrix, std::vector<int> *jacobsthal, std::vector<int> *sequence, std::vector<int> *pend) {
     for (unsigned long int i = 0; i < jacobsthal->size(); i++) {      
         unsigned long int index = (*jacobsthal)[i];
