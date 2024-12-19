@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/18 14:41:57 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/19 16:26:16 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,41 +48,57 @@ int    save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangle
     return 0;    
 }
 
-bool    compareLargest_deque(std::deque<int> a, std::deque<int> b) {
-    return a[0] < b[0];
-}
+void    merge_insert_deque(std::deque<std::deque<int> > *intMatrix, size_t start) {
+    
+    if (start >= intMatrix->size() - 1)
+        return ;
 
-void    swap_largest_deque(std::deque<std::deque<int> > *intMatrix) {
-    std::sort(intMatrix->begin(), intMatrix->end(), compareLargest_deque);
-}
-
-void    get_smallest_based_on_jacobsthall_deque(std::deque<std::deque<int> > *intMatrix, std::deque<int> *jacobsthal, std::deque<int> *sequence, std::deque<int> *pend) {
-    for (unsigned long int i = 0; i < jacobsthal->size(); i++) {      
-        unsigned long int index = (*jacobsthal)[i];
-
-        if (index < intMatrix->size() && std::find(jacobsthal->begin(), jacobsthal->begin() + i, index) == (jacobsthal->begin() + i)) {
-            std::deque<int>::iterator iter;
-            int val = (*intMatrix)[index][0];
-            iter = std::lower_bound(sequence->begin(), sequence->end(), val);
-            (*sequence).insert(iter, val);
-            (*pend).push_back((*intMatrix)[index][1]);
+    for (unsigned long int j = start + 1; j < intMatrix->size(); j++) {
+        if ((*intMatrix)[start][1] > (*intMatrix)[j][1]) {
+            std::swap((*intMatrix)[start], (*intMatrix)[j]);
         }
-    }
-    for (unsigned long int i = 0; i < intMatrix->size(); i++) {
-        if (std::find(jacobsthal->begin(), jacobsthal->end(), i) == jacobsthal->end()) {
-            (*pend).push_back((*intMatrix)[i][0]);
-            (*pend).push_back((*intMatrix)[i][1]);
-        }
-    }
+    }   
+    
+    merge_insert_deque(intMatrix, start + 1);
 }
 
 void    create_jacobsthall_sequence_deque(unsigned long int size, std::deque<int> *jacobsthal) {
-    (*jacobsthal).push_back(0);
     (*jacobsthal).push_back(1);
+    (*jacobsthal).push_back(3);
 
     for (unsigned long int i = 2; i < size; i++) {
         int next = (*jacobsthal)[i - 1] + 2 * (*jacobsthal)[i - 2];
         (*jacobsthal).push_back(next);
+    }
+}
+
+void    jacobsthal_insert_deque(std::deque<std::deque<int> > *intMatrix, std::deque<int> *jacobsthal, std::deque<int> *sequence, std::deque<int> *pend) {
+    
+    create_jacobsthall_sequence_deque(intMatrix->size(), jacobsthal);
+    
+    // Starting sequence with first pair
+    (*sequence).push_back((*intMatrix)[0][0]);
+    (*sequence).push_back((*intMatrix)[0][1]);
+
+    for (size_t i = 1; i < intMatrix->size(); i++) {
+        (*pend).push_back((*intMatrix)[i][0]);
+        (*sequence).push_back((*intMatrix)[i][1]);
+    }
+    
+    for (size_t i = 1; i < jacobsthal->size(); i++) {
+        size_t total = std::min((*jacobsthal)[i] - (*jacobsthal)[i - 1], static_cast<int>(pend->size()));       
+        size_t start = std::min(static_cast<int>(pend->size()) - 1, (*jacobsthal)[i]);
+
+        while (total) {
+            std::deque<int>::iterator iter;
+            iter = std::lower_bound(sequence->begin(), sequence->end(), (*pend)[start]);
+            (*sequence).insert(iter, (*pend)[start]);
+            (*pend).erase(pend->begin() + start);
+            start--;
+            total--;
+        }
+        if (pend->empty())
+            break ;
     }
 }
 
@@ -96,13 +112,6 @@ void    insert_item_deque(std::deque<int> *vec, std::deque<int> *pend, int val, 
     vec->insert(iter, val);   
 }
 
-void    binary_insertion_deque(std::deque<int> *sequence, std::deque<int> *pend) {
-    for (unsigned long int i = 0; i < pend->size(); i++) {
-        std::deque<int>::iterator iter;
-        iter = std::lower_bound(sequence->begin(), sequence->end(), (*pend)[i]);
-        sequence->insert(iter, (*pend)[i]);
-    }
-}
 
 /*
 #########################    USING VECTOR CONTAINER    #########################
@@ -148,52 +157,57 @@ void    print_matrix_vector(std::vector<std::vector<int> > *m) {
     }
 }
 
-bool    compareLargest_vector(std::vector<int> a, std::vector<int> b) {
-    return a[0] < b[0];
-}
+void    merge_insert_vector(std::vector<std::vector<int> > *intMatrix, size_t start) {
+    
+    if (start >= intMatrix->size() - 1)
+        return ;
 
-void    swap_largest_vector(std::vector<std::vector<int> > *intMatrix) {
-    std::sort(intMatrix->begin(), intMatrix->end(), compareLargest_vector);
-}
-
-/*
-    Here we go through the jacobsthal sequence
-    We get the current index on the jacobsthal
-    Then we check if that index is in the bounds of the main vector container and if it's not a repeated index like in the case of the '1'
-        Then we go to that index on our main vector container and we get the smallest value (not yet sorted)
-        We find the lower_bound on our sequence vector - here it's empty in the beginning ?? and we insert the smaller values
-        THen the bigger values are directly inserted on the pend ???
-        
-        Then the remaining elements on the vector that weren't appended are added to the end of the pend vector 
-        here a simple check is done to skip the indexes that correspond to the jacobstal
-*/
-void    get_smallest_based_on_jacobsthall_vector(std::vector<std::vector<int> > *intMatrix, std::vector<int> *jacobsthal, std::vector<int> *sequence, std::vector<int> *pend) {
-    for (unsigned long int i = 0; i < jacobsthal->size(); i++) {      
-        unsigned long int index = (*jacobsthal)[i];
-
-        if (index < intMatrix->size() && std::find(jacobsthal->begin(), jacobsthal->begin() + i, index) == (jacobsthal->begin() + i)) {
-            std::vector<int>::iterator iter;
-            int val = (*intMatrix)[index][0];
-            iter = std::lower_bound(sequence->begin(), sequence->end(), val);
-            (*sequence).insert(iter, val);
-            (*pend).push_back((*intMatrix)[index][1]);
+    for (unsigned long int j = start + 1; j < intMatrix->size(); j++) {
+        if ((*intMatrix)[start][1] > (*intMatrix)[j][1]) {
+            std::swap((*intMatrix)[start], (*intMatrix)[j]);
         }
-    }
-    for (unsigned long int i = 0; i < intMatrix->size(); i++) {
-        if (std::find(jacobsthal->begin(), jacobsthal->end(), i) == jacobsthal->end()) {
-            (*pend).push_back((*intMatrix)[i][0]);
-            (*pend).push_back((*intMatrix)[i][1]);
-        }
-    }
+    }   
+    
+    merge_insert_vector(intMatrix, start + 1);
 }
 
 void    create_jacobsthall_sequence_vector(unsigned long int size, std::vector<int> *jacobsthal) {
-    (*jacobsthal).push_back(0);
     (*jacobsthal).push_back(1);
+    (*jacobsthal).push_back(3);
 
     for (unsigned long int i = 2; i < size; i++) {
         int next = (*jacobsthal)[i - 1] + 2 * (*jacobsthal)[i - 2];
         (*jacobsthal).push_back(next);
+    }
+}
+
+void    jacobsthal_insert_vector(std::vector<std::vector<int> > *intMatrix, std::vector<int> *jacobsthal, std::vector<int> *sequence, std::vector<int> *pend) {
+    
+    create_jacobsthall_sequence_vector(intMatrix->size(), jacobsthal);
+    
+    // Starting sequence with first pair
+    (*sequence).push_back((*intMatrix)[0][0]);
+    (*sequence).push_back((*intMatrix)[0][1]);
+
+    for (size_t i = 1; i < intMatrix->size(); i++) {
+        (*pend).push_back((*intMatrix)[i][0]);
+        (*sequence).push_back((*intMatrix)[i][1]);
+    }
+    
+    for (size_t i = 1; i < jacobsthal->size(); i++) {
+        size_t total = std::min((*jacobsthal)[i] - (*jacobsthal)[i - 1], static_cast<int>(pend->size()));       
+        size_t start = std::min(static_cast<int>(pend->size()) - 1, (*jacobsthal)[i]);
+
+        while (total) {
+            std::vector<int>::iterator iter;
+            iter = std::lower_bound(sequence->begin(), sequence->end(), (*pend)[start]);
+            (*sequence).insert(iter, (*pend)[start]);
+            (*pend).erase(pend->begin() + start);
+            start--;
+            total--;
+        }
+        if (pend->empty())
+            break ;
     }
 }
 
@@ -207,11 +221,4 @@ void    insert_item_vector(std::vector<int> *vec, std::vector<int> *pend, int va
     vec->insert(iter, val);   
 }
 
-void    binary_insertion_vector(std::vector<int> *sequence, std::vector<int> *pend) {
-    for (unsigned long int i = 0; i < pend->size(); i++) {
-        std::vector<int>::iterator iter;
-        iter = std::lower_bound(sequence->begin(), sequence->end(), (*pend)[i]);
-        sequence->insert(iter, (*pend)[i]);
-    }
-}
  

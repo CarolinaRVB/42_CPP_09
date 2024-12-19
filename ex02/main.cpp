@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:35 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/18 16:24:42 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/19 16:27:13 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,9 @@ template <typename T>
 void    print_nums(T nums, long unsigned int len, std::string message) {
     std::cout << message << " ";
 
-    // unsigned long int max = len;
-    // if (max > 5) {
-    //     max = 5;
-    // }
     for (unsigned long int i = 0; i < len; i++) {
         std::cout << nums[i] << " ";
     }
-    // if (max != len)
-    //     std::cout << "[...]";
     std::cout << std::endl;
 }
 
@@ -45,37 +39,30 @@ void    print_result(int argc, char **argv, std::vector<int> *sequence, double t
     std::cout << "Time to process a range of 5 elements with std::deque : " << std::fixed << std::setprecision(5) << timeD << " us \n";    
 }
 
+void    print_matrix(std::vector<std::vector<int> > *m) {
+    std::cout << "PAIRS:: \n";
+    for (long unsigned int i = 0; i < (*m).size(); i++) {
+        std::cout << "Vec pair is: "<< (*m)[i][0] << ", " << (*m)[i][1] << "\n";
+        // std::cout << "Vec pair is: "<< (*m)[i][1] << "\n";   
+    }
+}
+
 /*
-    STEPS:
-        - Sort into pairs and re-order: small | big
-        - Sort the larger elements from each pair - create sorted sequence using merge-insert
-        - Insert at the start of the sequence the element that was paired with the first and smallest 
-        element of the sorted sequence
-        - Insert the remaining elements into the sorted sequence using a specific insertio order - jacobsthal
-
-    STEPS V2:
-        - Sort into pairs and re-order: small | big - should be recursive?
-        - Create sequence out of the smallest element of the smallest pair and the remaining big elements
-        (b1, a1, b2, a2... bx, ax.)
-        - This sequence will already be sorted
-        - Create sequence with the remaining b's or smaller elements - pend
-        - Binary insert the elements from pend into the sequence through the jacobsthal numbers.
-        If there are no more jacobsthal numbers we insert the remaining elements normally in order through binary insertion
-        
-*/
-
-// void    recursive_largest(std::vector<std::vector<int> > *intMatrix) {
+    Initialize the sequence with the first pair and then the remaining big numbers (which are already sorted)
+    The remaining b's go to pend
     
-//     for (unsigned long int i = 0; i < intMatrix->size() - 1; i++) {
-//         for (unsigned long int j = i + 1; j < intMatrix->size(); j++) {
-//             if (intMatrix[i][1] > intMatrix[j][1]) {
-//                 std::swap(intMatrix[i], intMatrix[j]);
-//             }
-//         }   
-//     }
-// }
-
-
+    The way Jacobsthal numbers dictate the order of insertion is like this: we start from the Jacobsthal number of 3. 
+    We start insertion from element b3. We insert elements in the reverse order starting from this element, 
+    until we hit b element of number of previous Jacobsthal number. In other words, the amount of inserted elements is
+    In other words, the amount of inserted elements is current_jacobsthal - previous_jacobsthal.
+    For the Jacobsthal number of 3, we insert 2 elements (3 - 1), b3, b2.
+    For the Jacobsthal number of 5, we insert 2 elements (5 - 3), b5, b4.
+    For the Jacobsthal number of 11, we insert 6 elements (11 - 5), b11, b10, b9, b8, b7, b6.
+    I hope that you got the idea. And that you understand now that we can't always insert numbers this way.
+    If there's not enough elemets to insert, for example, the Jacobsthal number is 11 (we should insert 6 elements),
+    but we have only 3 elements in the pend, then we need to handle it somehow, and the simplest way to do this is 
+    to insert the pend elements in order, as we did in recursion level 3.
+*/
 int    sort_vector(int argc, char **argv, std::vector<int> *sequence) {
     std::vector<std::vector<int> >      intMatrix;
     std::vector<int>                    pend;
@@ -83,42 +70,33 @@ int    sort_vector(int argc, char **argv, std::vector<int> *sequence) {
     std::vector<int>                    wrangler;
 
 
-    /*  Creates the vector of vector pairs and sorts the pairs inside */
     if (invalid_input(argv) || save_ints_vector(&intMatrix, &wrangler, argv, argc)) {
         std::cout << "Error\n";
         return (1);
     }
-
-    /* Creates the jacobsthal sequence based on the main vector */
-    create_jacobsthall_sequence_vector(intMatrix.size(), &jacobsthal);
-    
-    /*  */
-    get_smallest_based_on_jacobsthall_vector(&intMatrix, &jacobsthal, sequence, &pend);
-    binary_insertion_vector(sequence, &pend);
-    
+    merge_insert_vector(&intMatrix);
+    jacobsthal_insert_vector(&intMatrix, &jacobsthal, sequence, &pend);
     if (wrangler[0] != -1)
         insert_item_vector(sequence, &wrangler, -1, 0);
 
     return 0;
 }
 
-int    sort_deque(int argc, char **argv, std::deque<int> *sequenceD) {
-    std::deque<std::deque<int> >       intMatrixD;
-    std::deque<int>                    pendD;
-    std::deque<int>                    jacobsthalD;
-    std::deque<int>                    wranglerD;
+int    sort_deque(int argc, char **argv, std::deque<int> *sequence) {
+    std::deque<std::deque<int> >       intMatrix;
+    std::deque<int>                    pend;
+    std::deque<int>                    jacobsthal;
+    std::deque<int>                    wrangler;
 
-    if (invalid_input(argv) || save_ints_deque(&intMatrixD, &wranglerD, argv, argc)) {
+    if (invalid_input(argv) || save_ints_deque(&intMatrix, &wrangler, argv, argc)) {
         std::cout << "Error\n";
         return (1);
     }
-
-    create_jacobsthall_sequence_deque(intMatrixD.size(), &jacobsthalD);
-    get_smallest_based_on_jacobsthall_deque(&intMatrixD, &jacobsthalD, sequenceD, &pendD);
-    binary_insertion_deque(sequenceD, &pendD);
+    merge_insert_deque(&intMatrix);
+    jacobsthal_insert_deque(&intMatrix, &jacobsthal, sequence, &pend);
     
-    if (wranglerD[0] != -1)
-        insert_item_deque(sequenceD, &wranglerD, -1, 0);
+    if (wrangler[0] != -1)
+        insert_item_deque(sequence, &wrangler, -1, 0);
     
     return 0;
 }
