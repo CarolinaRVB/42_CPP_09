@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:35:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/09 16:12:30 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/19 18:19:33 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
     }
 
     try {
-        validate_input(argv[1], &stackElements);
-        rpn(stackElements);
+        validate_input(argv[1]);
+        rpn(argv[1]);
     }
     catch (std::exception &e) {
         std::cout << e.what() << "\n";
