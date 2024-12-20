@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:57:10 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 17:17:49 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 22:03:31 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ void BitcoinExchange::handle_input(char *input) {
                     iterator = _map.lower_bound(date);
                     if (iterator != _map.begin())
                         iterator--;
-                    calculate_bitcoin(iterator, date, value);
+                    else if (iterator->first > date)
+                        std::cout << "Error: bad input => " << date << "\n";
+                    else
+                        calculate_bitcoin(iterator, date, value);
                 }
             }
         }
@@ -123,6 +126,30 @@ int check_set(char c, std::string set) {
     return (1);
 }
 
+/*
+    A year is a leap year if:
+
+    It is divisible by 4, AND
+    It is not divisible by 100, UNLESS it is also divisible by 400.
+*/
+bool leap_year(int year) {
+    return (year%4 == 0 && (year%100 != 0 || year % 400 == 0));
+}
+
+bool    date_exists(int year, int month, int day) {
+    if (year < 2009 || year > 2024 || month < 1 || month > 12)
+        return false;
+    
+    int month_days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    
+    if (month == 2 && leap_year(year))
+        month_days[1] = 29;
+    
+    if (day < 1 || day > month_days[month - 1])
+        return false;
+    return true;
+}
+
 int    invalid_date(std::string date, bool print) {
     std::string set = "0123456789-";
     int i = 0;
@@ -140,13 +167,11 @@ int    invalid_date(std::string date, bool print) {
         }
         i++;
     }
-    if (std::atoi(date.substr(0, 4).c_str()) < 2009
-        || std::atoi(date.substr(0, 4).c_str()) > 2024
-        || std::atoi(date.substr(5, 2).c_str()) > 12
-        || date.substr(5,2) == "00"
-        || std::atoi((date.substr(8, 2)).c_str()) > 31
-        || date.substr(8,2) == "00")
-    {
+
+    int year = std::atoi(date.substr(0, 4).c_str());
+    int month = std::atoi(date.substr(5, 2).c_str());
+    int day = std::atoi((date.substr(8, 2)).c_str());
+    if (!date_exists(year, month, day)) {
         if (print)
             std::cout << "Error: bad input => " << date << "\n";
         return (1);
