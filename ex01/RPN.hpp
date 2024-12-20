@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:24:31 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/19 18:19:46 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 08:48:01 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@
 # include <algorithm>
 # include <stack>
 
-void     get_size(char *input, int *size);
-int      invalid_token(char c, std::string set);
-void     get_first_calculation(std::stack<char> *stackElements, size_t *right, size_t *left, char *oper);
-int      invalid_internal_calculations(std::stack<char> *stackElements, size_t *right, size_t left, char oper);
+void     get_size(char *input, size_t *size);
+int      valid_token(char c, std::string set);
 int      validate_input(char *input);
 void     rpn(char *input);
 
