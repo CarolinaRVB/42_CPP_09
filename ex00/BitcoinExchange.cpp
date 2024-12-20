@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:57:10 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 12:43:33 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 17:17:49 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int    invalid_date(std::string date, bool print) {
     int i = 0;
 
     if (std::count(date.begin(), date.end(), '-')  != 2 || date.size() != 10
-        || date[4] != '-' || date[7] != '-' ) {    
+        || date[4] != '-' || date[7] != '-' ) {
         std::cout << "Error: bad input => $" << date << "$\n";        
         return 1;
     }
@@ -151,7 +151,6 @@ int    invalid_date(std::string date, bool print) {
             std::cout << "Error: bad input => " << date << "\n";
         return (1);
     }
-
     return 0;
 }
 
@@ -241,6 +240,5 @@ int    BitcoinExchange::save_file(std::fstream &file) {
 void    BitcoinExchange::calculate_bitcoin(std::map<std::string, float>::iterator iterator, std::string date, std::string value) {
     float val = std::atof(value.c_str());
     float calc = iterator->second * val;
-    std::cout << date << " => " << value << " = "  << calc << "\n";    
+    std::cout << date << " => " << value << " = " << calc << "\n";    
 }
-

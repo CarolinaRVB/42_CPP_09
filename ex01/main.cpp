@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:35:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 13:05:01 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 14:22:35 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int main(int argc, char **argv) {
         return 1;
     }
     try {
-        validate_input(argv[1]);
+        if (validate_input(argv[1]))
+            return 0;
         rpn(argv[1]);
     }
     catch (std::exception &e) {

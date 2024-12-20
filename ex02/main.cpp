@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:35 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 13:10:21 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 14:30:06 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,6 @@ void    print_matrix(std::vector<std::vector<int> > *m) {
     }
 }
 
-/*
-    Initialize the sequence with the first pair and then the remaining big numbers (which are already sorted)
-    The remaining b's go to pend
-    
-    The way Jacobsthal numbers dictate the order of insertion is like this: we start from the Jacobsthal number of 3. 
-    We start insertion from element b3. We insert elements in the reverse order starting from this element, 
-    until we hit b element of number of previous Jacobsthal number. In other words, the amount of inserted elements is
-    In other words, the amount of inserted elements is current_jacobsthal - previous_jacobsthal.
-    For the Jacobsthal number of 3, we insert 2 elements (3 - 1), b3, b2.
-    For the Jacobsthal number of 5, we insert 2 elements (5 - 3), b5, b4.
-    For the Jacobsthal number of 11, we insert 6 elements (11 - 5), b11, b10, b9, b8, b7, b6.
-    I hope that you got the idea. And that you understand now that we can't always insert numbers this way.
-    If there's not enough elemets to insert, for example, the Jacobsthal number is 11 (we should insert 6 elements),
-    but we have only 3 elements in the pend, then we need to handle it somehow, and the simplest way to do this is 
-    to insert the pend elements in order, as we did in recursion level 3.
-*/
 int    sort_vector(int argc, char **argv, std::vector<int> *sequence) {
     std::vector<std::vector<int> >      intMatrix;
     std::vector<int>                    pend;
@@ -100,6 +84,14 @@ int    sort_deque(int argc, char **argv, std::deque<int> *sequence) {
     return 0;
 }
 
+
+/*
+    big num set --> vector is faster
+    small num set --> deque is faster
+    why?
+        - Vector stores elements in a continuous block of memory -> fast access
+        - Deque is implemented as a series of smaller continuous blocks of memory - slower
+*/
 int main(int argc, char **argv) {
 
     if (argc == 1) {

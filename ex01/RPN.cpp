@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:24:33 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 13:03:52 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 16:23:34 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,48 @@ void    perform_calculations(size_t *result, size_t left, size_t right, char ope
             break;
         case '/':
             *result = left / right;
+            break ;
         default:
             break;            
     }
+}
+
+int check_first_digits(char *input) {
+    int found = 0;
+
+    for (size_t i = 0; input[i]; i++) {
+        if (found == 2)
+            return 0;
+        if (input[i] == ' ')
+            continue;
+        else if (isdigit(input[i])) {
+            found++;
+        }
+        else {
+            if (found != 2)
+                return 1;
+        }
+    }
+    return 0;
+}
+
+int one_digit(char *input) {
+    int num = 0;
+    int found = 0;
+
+    for (size_t i = 0; input[i]; i++) {
+        if (input[i] == ' ')
+            continue;
+        else if (isdigit(input[i])) {
+            found++;
+            num = input[i] - '0';
+        }
+        else 
+            return 0;
+    }
+    if (found == 1)
+        std::cout << num << "\n";
+    return 1;
 }
 
 int validate_input(char *input) {
@@ -54,9 +93,10 @@ int validate_input(char *input) {
     size_t size = 0;
     
     get_size(input, &size);
-    if (input[0] ==  '\0' || !std::isdigit(input[0]) || !std::isdigit(input[2]))
+    if (input[0] ==  '\0' || check_first_digits(input))
         throw std::logic_error("Error");
-    
+    if (one_digit(input))
+        return 1;
     for (size_t i = 0; input[i]; i++) {
         if (isdigit(input[i])) {
             if (i + 1 < size && input[i + 1] != ' ')
@@ -93,6 +133,7 @@ void    rpn(char *nums) {
     std::stack<size_t> stackElements;
     
     result = 0;
+
     for (size_t i = 0; nums[i]; i++) {
         if (isdigit(nums[i])){
             stackElements.push(nums[i] - '0');
@@ -110,6 +151,8 @@ void    rpn(char *nums) {
             else
                 left =  static_cast<size_t>(stackElements.top());
             stackElements.pop();
+            if (oper == '/' && right == 0)
+                throw std::logic_error("Error: invalid arguments"); 
             perform_calculations(&result, left, right, oper);
             stackElements.push(result);
         }
