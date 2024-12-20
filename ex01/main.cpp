@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:35:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 14:22:35 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 22:16:25 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ int main(int argc, char **argv) {
         return 1;
     }
     try {
-        if (validate_input(argv[1]))
-            return 0;
+        if (validate_input(argv[1])){
+            std::cout << "here\n";
+            return 0;}
         rpn(argv[1]);
     }
     catch (std::exception &e) {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:24:33 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 16:23:34 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 22:38:07 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void get_size(char *input, size_t *size) {
     }
 }
 
-void    perform_calculations(size_t *result, size_t left, size_t right, char oper) {
+void    perform_calculations(int *result, int left, int right, char oper) {
     switch (oper) {
         case '*':
             *result = left * right;
@@ -83,6 +83,8 @@ int one_digit(char *input) {
     }
     if (found == 1)
         std::cout << num << "\n";
+    else
+        return 0;
     return 1;
 }
 
@@ -119,38 +121,37 @@ int validate_input(char *input) {
         else
             throw  std::logic_error("Error: invalid arguments");
     }
-    if (oper_counter != nums_counter - 1)
+    if (oper_counter != nums_counter - 1 || !oper_counter)
         throw  std::logic_error("Error: invalid arguments");   
 
     return 0;
 }
 
 void    rpn(char *nums) {
-    size_t  left;
-    size_t  right;  
-    size_t  result;
+    int  left;
+    int  right;  
+    int  result = 0;
     char    oper;
-    std::stack<size_t> stackElements;
+    std::stack<int> stackElements;
     
-    result = 0;
-
-    for (size_t i = 0; nums[i]; i++) {
+    for (int i = 0; nums[i]; i++) {
         if (isdigit(nums[i])){
             stackElements.push(nums[i] - '0');
         }
         else if (nums[i] != ' ') {
             oper = nums[i];
-            right =  static_cast<size_t>(stackElements.top());
+            right =  stackElements.top();
             stackElements.pop();
             if (stackElements.empty()) {
                 left = right;
                 if (!isdigit(nums[++i]))
                     throw std::logic_error("Error: invalid arguments");
-                right = static_cast<size_t>(nums[i] - '0');
+                right = nums[i] - '0';
             }
-            else
-                left =  static_cast<size_t>(stackElements.top());
-            stackElements.pop();
+            else {
+                left = stackElements.top();
+                stackElements.pop();
+            }
             if (oper == '/' && right == 0)
                 throw std::logic_error("Error: invalid arguments"); 
             perform_calculations(&result, left, right, oper);
