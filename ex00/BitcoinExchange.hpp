@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 13:16:35 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/09 10:47:02 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:42:34 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,11 @@
 # include <map>
 # include <algorithm>
 # include <fstream>
-# include <map>
 # include <cstdlib>
 # include <iomanip>
 # include <limits>
 # include <set>
 # include <sstream>
-/*
-    Can create a class that has a map container
-    One of the constructors will receive a char * (database.csv) -> to build
-    map of dataset
-    Can have method to print dataset
-    Can have method to process input text to retrieve required bitcoin prices -> void
-    function that simply processes and prints line by line
-
-    OR
-
-    can simply have file that has functions
-
-*/
 
 class BitcoinExchange {
     private:
@@ -43,14 +29,23 @@ class BitcoinExchange {
         BitcoinExchange();
     
     public:
-        BitcoinExchange(std::string file); // builds and checks file
+        BitcoinExchange(std::string file);
         BitcoinExchange(const BitcoinExchange& obj);
         BitcoinExchange& operator=(const BitcoinExchange& obj);
         
         ~BitcoinExchange();
         void    handle_input(char *input);
         void    print_map();
+        int     wrong_dates(std::fstream &file, std::map<std::string, float> *_map);
+        int     save_file(std::fstream &file);
+        void    calculate_bitcoin(std::map<std::string, float>::iterator iterator, std::string date, std::string value);
 
 };
+
+int     invalid_entry(std::string line, std::string *date, std::string *valueString, std::string sep, bool print);
+int     invalid_date(std::string date, bool print);
+int     invalid_value(std::string value, bool print);
+int     check_set(char c, std::string set);
+
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:35 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/19 16:27:13 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:10:21 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void    print_matrix(std::vector<std::vector<int> > *m) {
     std::cout << "PAIRS:: \n";
     for (long unsigned int i = 0; i < (*m).size(); i++) {
         std::cout << "Vec pair is: "<< (*m)[i][0] << ", " << (*m)[i][1] << "\n";
-        // std::cout << "Vec pair is: "<< (*m)[i][1] << "\n";   
     }
 }
 

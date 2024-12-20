@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:35:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 08:47:55 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:05:01 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,10 @@
 int main(int argc, char **argv) {
     std::stack<char>     stackElements;
 
-    if (argc == 1){
-        std::cout << "Error: no arguments provided\n";
+    if (argc != 2){
+        std::cout << "Error: invalid arguments\n";
         return 1;
     }
-
     try {
         validate_input(argv[1]);
         rpn(argv[1]);

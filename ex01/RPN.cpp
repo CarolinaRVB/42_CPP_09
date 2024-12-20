@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:24:33 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 08:47:42 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:03:52 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int validate_input(char *input) {
     for (size_t i = 0; input[i]; i++) {
         if (isdigit(input[i])) {
             if (i + 1 < size && input[i + 1] != ' ')
-                throw  std::logic_error("Error1: invalid arguments");
+                throw  std::logic_error("Error: invalid arguments");
             i++;
             nums_counter++;
             while (i < size && isspace(input[i]))
@@ -69,7 +69,7 @@ int validate_input(char *input) {
         }
         else if (valid_token((input[i]), tokens)) {
             if (i + 1 < size && input[i + 1] != ' ')
-                throw  std::logic_error("Error2: invalid arguments");
+                throw  std::logic_error("Error: invalid arguments");
             i++;
             oper_counter++;
             while (i < size && isspace(input[i]))
@@ -77,14 +77,13 @@ int validate_input(char *input) {
             i--;   
         }
         else
-            throw  std::logic_error("Error3: invalid arguments");
+            throw  std::logic_error("Error: invalid arguments");
     }
     if (oper_counter != nums_counter - 1)
-        throw  std::logic_error("Error4: invalid arguments");   
+        throw  std::logic_error("Error: invalid arguments");   
 
     return 0;
 }
-
 
 void    rpn(char *nums) {
     size_t  left;
@@ -104,7 +103,9 @@ void    rpn(char *nums) {
             stackElements.pop();
             if (stackElements.empty()) {
                 left = right;
-                right = static_cast<size_t>(nums[++i] - '0');
+                if (!isdigit(nums[++i]))
+                    throw std::logic_error("Error: invalid arguments");
+                right = static_cast<size_t>(nums[i] - '0');
             }
             else
                 left =  static_cast<size_t>(stackElements.top());

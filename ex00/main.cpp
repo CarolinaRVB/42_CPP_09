@@ -3,27 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:50:37 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/12 10:57:50 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:45:48 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "BitcoinExchange.hpp"
 
-/*
-    std::map is implemented as a binary search tree, which ensures that the
-    elements are always sorted based on their keys. This sorted structure
-    allows for efficient searching, insertion, and deletion of elements,
-    making std::map a popular choice when fast key-based operations are required.
-*/
-
 int main(int argc, char **argv) {
 
-    if (argc == 1)
-        std::cout << "Error: could not open file\n";
-    
+    if (argc != 2){
+        std::cout << "Error: could not open file.\n";
+        return 1;
+    }
     try {
         BitcoinExchange btc("data.csv");
         btc.handle_input(argv[1]);
