@@ -20,9 +20,8 @@ int main(int argc, char **argv) {
         return 1;
     }
     try {
-        if (validate_input(argv[1])){
-            std::cout << "here\n";
-            return 0;}
+        if (validate_input(argv[1]))
+            return 0;
         rpn(argv[1]);
     }
     catch (std::exception &e) {

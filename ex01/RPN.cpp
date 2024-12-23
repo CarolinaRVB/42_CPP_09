@@ -118,6 +118,8 @@ int validate_input(char *input) {
                 i++;
             i--;   
         }
+        else if (input[i] == ' ')
+            continue ;
         else
             throw  std::logic_error("Error: invalid arguments");
     }

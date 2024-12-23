@@ -55,45 +55,58 @@ void    BitcoinExchange::print_map() {
     }
 }
 
+void    BitcoinExchange::handle_calculation(std::string *date, std::string *value) {
+    std::map<std::string, float>::iterator iterator;
+    
+    iterator = _map.find(*date);
+    if (iterator != _map.end())
+        calculate_bitcoin(iterator, *date, *value);
+    else {
+        iterator = _map.lower_bound(*date);
+        if (iterator != _map.begin())
+            iterator--;
+        if (iterator->first > *date)
+            std::cout << "Error: bad input => " << *date << "\n";
+        else
+            calculate_bitcoin(iterator, *date, *value);
+    }
+}
+
 void BitcoinExchange::handle_input(char *input) {
     std::fstream    file;
     std::string     line;
     std::string     date;
     std::string     value;
-    std::map<std::string, float>::iterator iterator;
+    bool first = true;
 
     file.open(input, std::fstream::in);
     if (file.fail())
         throw std::runtime_error("Error: failed to open input file");
     
     getline(file, line);
-    if (line != "date | value") {
-        std::cout << "Error: invalid input format\n";
-        return ;
-    }
     while (!file.eof()) {
-        getline(file, line);
-        if (!line.empty()) {
-            if (invalid_entry(line, &date, &value, "|", true)){
+        if (first && line.substr(0, 12) == "date | value") {
+            first = false;
+            if (line.size() > 12) {
+                file.close();
+                throw std::logic_error("Error: invalid format");
+            }
+            else
                 continue;
-            }
-            else {
-                iterator = _map.find(date);
-                if (iterator != _map.end()) {
-                    calculate_bitcoin(iterator, date, value);
-                }
-                else {
-                    iterator = _map.lower_bound(date);
-                    if (iterator != _map.begin())
-                        iterator--;
-                    else if (iterator->first > date)
-                        std::cout << "Error: bad input => " << date << "\n";
-                    else
-                        calculate_bitcoin(iterator, date, value);
-                }
-            }
         }
-    }   
+        else {
+            if (first)
+                first = false;
+            getline(file, line);
+        }
+        if (!line.empty()) {
+            if (invalid_entry(line, &date, &value, "|", true))
+                continue;
+            else 
+                handle_calculation(&date, &value);
+        }
+    }  
+    file.close();
 }
 
 int BitcoinExchange::wrong_dates(std::fstream &file, std::map<std::string, float> *_map) {
@@ -112,129 +125,6 @@ int BitcoinExchange::wrong_dates(std::fstream &file, std::map<std::string, float
             iter++;
         }
     }
-    return 0;
-}
-
-int check_set(char c, std::string set) {
-    int i = 0;
-
-    while (set[i]) {
-        if (set[i] == c)
-            return (0);
-        i++;
-    }
-    return (1);
-}
-
-/*
-    A year is a leap year if:
-
-    It is divisible by 4, AND
-    It is not divisible by 100, UNLESS it is also divisible by 400.
-*/
-bool leap_year(int year) {
-    return (year%4 == 0 && (year%100 != 0 || year % 400 == 0));
-}
-
-bool    date_exists(int year, int month, int day) {
-    if (year < 2009 || year > 2024 || month < 1 || month > 12)
-        return false;
-    
-    int month_days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    
-    if (month == 2 && leap_year(year))
-        month_days[1] = 29;
-    
-    if (day < 1 || day > month_days[month - 1])
-        return false;
-    return true;
-}
-
-int    invalid_date(std::string date, bool print) {
-    std::string set = "0123456789-";
-    int i = 0;
-
-    if (std::count(date.begin(), date.end(), '-')  != 2 || date.size() != 10
-        || date[4] != '-' || date[7] != '-' ) {
-        std::cout << "Error: bad input => $" << date << "$\n";        
-        return 1;
-    }
-    while (date[i]) {
-        if (check_set(date[i], set)) {
-            if (print)
-                std::cout << "Error: bad input => " << date << "\n";        
-            return (1);
-        }
-        i++;
-    }
-
-    int year = std::atoi(date.substr(0, 4).c_str());
-    int month = std::atoi(date.substr(5, 2).c_str());
-    int day = std::atoi((date.substr(8, 2)).c_str());
-    if (!date_exists(year, month, day)) {
-        if (print)
-            std::cout << "Error: bad input => " << date << "\n";
-        return (1);
-    }
-    return 0;
-}
-
-int    invalid_value(std::string value, bool print) {
-    std::string doubles = "0123456789.";
-    int i = 0;
-
-    if (value[0] == '-') {
-        std::cout << "Error: not a positive number.\n";
-        return (1);
-    }
-    if (value[0] == '.' || (value[value.length() - 1] == '.') 
-        || std::count(value.begin(), value.end(), '.') > 1) {
-        if (print)
-            std::cout << "Error: bad input => " << value << "\n";
-        return (1);
-    }
-    while (value[i]) {
-        if (check_set(value[i], doubles)) {
-            if (print)
-                std::cout << "Error: bad input => " << value << "\n";
-            return (1);
-        }
-        i++;
-    }
-    return 0;
-}
-
-int invalid_entry(std::string line, std::string *date, std::string *valueString, std::string sep, bool print) {
-    std::size_t separator = line.find(sep);
-    if (separator == std::string::npos){
-        if (print)
-            std::cout << "Error: bad input => " << line << "\n";
-        return 1;
-    }
-
-    if (print)
-        separator--;
-    *date = line.substr(0, separator);
-    if (invalid_date(*date, print)) {
-        return 1;
-    }
-    size_t start = separator + 1;
-    if (print)
-        start += 2;
-    *valueString = line.substr(start, line.size());
-    if ((*valueString).empty()) {
-        if (print)
-            std::cout << "Error: bad input => " << date << "\n";
-        return 1;
-    }
-    float value = std::atof((*valueString).c_str());
-    if (print && value > 1000) {
-        std::cout << "Error: too large a number\n";
-        return 1;
-    }
-    if (invalid_value((*valueString), print))
-        return 1;
-
     return 0;
 }
 
@@ -266,4 +156,119 @@ void    BitcoinExchange::calculate_bitcoin(std::map<std::string, float>::iterato
     float val = std::atof(value.c_str());
     float calc = iterator->second * val;
     std::cout << date << " => " << value << " = " << calc << "\n";    
+}
+
+int check_set(char c, std::string set) {
+    int i = 0;
+
+    while (set[i]) {
+        if (set[i] == c)
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
+int error_return(bool print, std::string msg=NULL, std::string *date=NULL) {
+    if (print && date)
+        std::cout << msg << *date << "\n";
+    else if (print)
+        std::cout << msg;
+    return 1;
+}
+
+/*
+    A year is a leap year if:
+
+    It is divisible by 4, AND
+    It is not divisible by 100, UNLESS it is also divisible by 400.
+*/
+bool leap_year(int year) {
+    return (year%4 == 0 && (year%100 != 0 || year%400 == 0));
+}
+
+bool    date_exists(int year, int month, int day, bool print) {
+    if (year < 2009 || month < 1 || month > 12 || (!print && year > 2024 ))
+        return false;
+
+    int month_days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    
+    if (month == 2 && leap_year(year))
+        month_days[1] = 29;
+    
+    if (day < 1 || day > month_days[month - 1])
+        return false;
+    return true;
+}
+
+int    invalid_date(std::string date, bool print) {
+    std::string set = "0123456789-";
+    int year = std::atoi(date.substr(0, 4).c_str());
+    int month = std::atoi(date.substr(5, 2).c_str());
+    int day = std::atoi((date.substr(8, 2)).c_str());
+    int i = 0;
+
+    if (std::count(date.begin(), date.end(), '-')  != 2 || date.size() != 10
+        || date[4] != '-' || date[7] != '-' )
+        return (error_return(print, "Error: bad input => ", &date));
+
+    while (date[i]) {
+        if (check_set(date[i], set)) 
+            return (error_return(print, "Error: bad input => ", &date));
+        i++;
+    }
+    if (!date_exists(year, month, day, print)) 
+        return (error_return(print, "Error: bad input => ", &date));
+
+    return 0;
+}
+
+int    invalid_value(std::string value, bool print) {
+    std::string doubles = "0123456789.";
+    int i = 0;
+
+    if (value[0] == '-')
+        return (error_return(print, "Error: not a positive number.\n"));
+    if (value[0] == '.' || (value[value.length() - 1] == '.') 
+        || std::count(value.begin(), value.end(), '.') > 1)
+            return (error_return(print, "Error: bad input => ", &value));
+    while (value[i]) {
+        if (check_set(value[i], doubles))
+            return (error_return(print, "Error: bad input => ", &value));
+        i++;
+    }
+    return 0;
+}
+
+int invalid_entry(std::string line, std::string *date, std::string *valueString, std::string sep, bool print) {
+    std::size_t separator = line.find(sep);
+    if (separator == std::string::npos)
+        return (error_return(print, "Error: bad input => ", &line));
+
+    if (print)
+        separator--;
+    *date = line.substr(0, separator);
+    if (invalid_date(*date, print))
+        return 1;
+    size_t start = separator + 1;
+    if (print)
+        start += 2;
+    if (start > line.size())
+        return (error_return(print, "Error: bad input => ", date));
+    
+    *valueString = line.substr(start, line.size());
+    if ((*valueString).empty())
+        return (error_return(print, "Error: bad input => ", date));
+    if (print) {
+        if (line[start - 1] != ' ')
+            return (error_return(print, "Error: bad input => ", date));
+    }
+    
+    float value = std::atof((*valueString).c_str());
+    if (print && value > 1000) 
+        return (error_return(print, "Error: too large a number\n"));
+    if (invalid_value((*valueString), print))
+        return 1;
+
+    return 0;
 }

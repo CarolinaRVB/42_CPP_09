@@ -35,12 +35,12 @@ void    print_nums(T nums, long unsigned int len, std::string message) {
 void    print_result(int argc, char **argv, std::vector<int> *sequence, double timeVec, double timeD) {
     print_nums(++argv, argc - 1, "Before:");
     print_nums(*sequence, sequence->size(), "After: ");
-    std::cout << "Time to process a range of 5 elements with std::vector : " << std::fixed << std::setprecision(5) << timeVec << " us \n";
-    std::cout << "Time to process a range of 5 elements with std::deque : " << std::fixed << std::setprecision(5) << timeD << " us \n";    
+    std::cout << "Time to process a range of " <<  sequence->size() << " elements with std::vector: " << std::fixed << std::setprecision(5) << timeVec << " us \n";
+    std::cout << "Time to process a range of " << sequence->size() << " elements with std::deque: " << std::fixed << std::setprecision(5) << timeD << " us \n";    
 }
 
 void    print_matrix(std::vector<std::vector<int> > *m) {
-    std::cout << "PAIRS:: \n";
+    std::cout << "PAIRS: \n";
     for (long unsigned int i = 0; i < (*m).size(); i++) {
         std::cout << "Vec pair is: "<< (*m)[i][0] << ", " << (*m)[i][1] << "\n";
     }
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
     if (sort_vector(argc, argv, &sequence) != 0)
         return 1;
     clock_t endVec = clock();
-    double timeVec = static_cast<double>(endVec - startVec) / 1000; 
+    double timeVec = static_cast<double>(endVec - startVec) / CLOCKS_PER_SEC; 
 
     // Sorting Nums with a DEQUE container
     std::deque<int>                    sequenceD;
@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
     if (sort_deque(argc, argv, &sequenceD) != 0)
         return 1;    
     clock_t endD = clock();
-    double timeD = static_cast<double>(endD - startD) / 1000; 
+    double timeD = static_cast<double>(endD - startD) / CLOCKS_PER_SEC; 
 
     // Show final results
     print_result(argc, argv, &sequence, timeVec, timeD);

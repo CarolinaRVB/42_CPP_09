@@ -34,6 +34,7 @@ class BitcoinExchange {
         BitcoinExchange& operator=(const BitcoinExchange& obj);
         
         ~BitcoinExchange();
+        void   handle_calculation(std::string *date, std::string *value);
         void    handle_input(char *input);
         void    print_map();
         int     wrong_dates(std::fstream &file, std::map<std::string, float> *_map);
@@ -46,6 +47,9 @@ int     invalid_entry(std::string line, std::string *date, std::string *valueStr
 int     invalid_date(std::string date, bool print);
 int     invalid_value(std::string value, bool print);
 int     check_set(char c, std::string set);
+int     error_return(bool print, std::string msg=NULL, std::string *date=NULL);
+bool    leap_year(int year);
+bool    date_exists(int year, int month, int day, bool print);
 
 
 #endif
