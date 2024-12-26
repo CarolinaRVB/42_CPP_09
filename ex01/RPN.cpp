@@ -160,4 +160,3 @@ void    rpn(char *nums) {
     }
     std::cout << result << "\n";
 }
-

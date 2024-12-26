@@ -16,7 +16,7 @@
 #########################    USING DEQUE CONTAINER    #########################
 */
 
-int duplicates_deque(std::deque<std::deque<int> > *m, int p1, int p2 = 0) {
+int duplicates_deque(std::deque<std::deque<int> > *m, int p1, int p2) {
     int count_p1 = 0;
     int count_p2 = 0;
     for (size_t j = 0; j < m->size(); j++) {
@@ -24,7 +24,7 @@ int duplicates_deque(std::deque<std::deque<int> > *m, int p1, int p2 = 0) {
         if (p2)
             count_p2 += std::count((*m)[j].begin(), (*m)[j].end(), p2);
     }
-    if ((!p2 && p1 >= 1) || count_p1 > 1 || count_p2 > 1)
+    if ((!p2 && count_p1 >= 1) || count_p1 > 1 || count_p2 > 1)
         return 1;
     return 0;
 }
@@ -134,7 +134,7 @@ void    insert_item_deque(std::deque<int> *vec, std::deque<int> *pend, int val, 
 #########################    USING VECTOR CONTAINER    #########################
 */
 
-int duplicates_vector(std::vector<std::vector<int> > *m, int p1, int p2 = 0) {
+int duplicates_vector(std::vector<std::vector<int> > *m, int p1, int p2) {
     int count_p1 = 0;
     int count_p2 = 0;
     for (size_t j = 0; j < m->size(); j++) {
@@ -142,7 +142,8 @@ int duplicates_vector(std::vector<std::vector<int> > *m, int p1, int p2 = 0) {
         if (p2)
             count_p2 += std::count((*m)[j].begin(), (*m)[j].end(), p2);
     }
-    if ((!p2 && p1 >= 1) || count_p1 > 1 || count_p2 > 1)
+    
+    if ((!p2 && count_p1 > 1) || count_p1 > 1 || count_p2 > 1)
         return 1;
     return 0;
 }
@@ -193,7 +194,6 @@ void    print_matrix_vector(std::vector<std::vector<int> > *m) {
 }
 
 void    merge_insert_vector(std::vector<std::vector<int> > *intMatrix, size_t start) {
-    
     if (start >= intMatrix->size() - 1)
         return ;
 

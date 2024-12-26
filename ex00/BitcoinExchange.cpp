@@ -94,11 +94,10 @@ void BitcoinExchange::handle_input(char *input) {
             else
                 continue;
         }
-        else {
-            if (first)
-                first = false;
+        else if (first) 
+            first = false;
+        else
             getline(file, line);
-        }
         if (!line.empty()) {
             if (invalid_entry(line, &date, &value, "|", true))
                 continue;
