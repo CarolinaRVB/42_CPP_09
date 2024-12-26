@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crebelo- <crebelo-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:50:37 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 12:45:48 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/26 11:05:38 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int main(int argc, char **argv) {
 
     if (argc != 2){
-        std::cout << "Error: could not open file.\n";
+        std::cout << "Error: invalid arguments.\n";
         return 1;
     }
     try {

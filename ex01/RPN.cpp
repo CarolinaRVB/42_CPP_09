@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:24:33 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 22:38:07 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/26 11:16:23 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,8 @@ int check_first_digits(char *input) {
             return 0;
         if (input[i] == ' ')
             continue;
-        else if (isdigit(input[i])) {
+        else if (isdigit(input[i]))
             found++;
-        }
         else {
             if (found != 2)
                 return 1;
@@ -88,6 +87,16 @@ int one_digit(char *input) {
     return 1;
 }
 
+void    validate_disposition(char *input, size_t *i, size_t size, size_t *counter) {
+    if (*i + 1 < size && input[*i + 1] != ' ')
+        throw  std::logic_error("Error: invalid arguments");
+    (*i)++;
+    (*counter)++;
+    while (*i < size && isspace(input[*i]))
+        (*i)++;
+    (*i)--;  
+}
+
 int validate_input(char *input) {
     std::string tokens = "+-/*";
     size_t nums_counter = 0;
@@ -100,24 +109,10 @@ int validate_input(char *input) {
     if (one_digit(input))
         return 1;
     for (size_t i = 0; input[i]; i++) {
-        if (isdigit(input[i])) {
-            if (i + 1 < size && input[i + 1] != ' ')
-                throw  std::logic_error("Error: invalid arguments");
-            i++;
-            nums_counter++;
-            while (i < size && isspace(input[i]))
-                i++;
-            i--;
-        }
-        else if (valid_token((input[i]), tokens)) {
-            if (i + 1 < size && input[i + 1] != ' ')
-                throw  std::logic_error("Error: invalid arguments");
-            i++;
-            oper_counter++;
-            while (i < size && isspace(input[i]))
-                i++;
-            i--;   
-        }
+        if (isdigit(input[i]))
+            validate_disposition(input, &i, size, &nums_counter);
+        else if (valid_token((input[i]), tokens))
+            validate_disposition(input, &i, size, &oper_counter);
         else if (input[i] == ' ')
             continue ;
         else
@@ -130,16 +125,15 @@ int validate_input(char *input) {
 }
 
 void    rpn(char *nums) {
-    int  left;
-    int  right;  
-    int  result = 0;
-    char    oper;
+    int             left;
+    int             right;  
+    char            oper;
+    int             result = 0;
     std::stack<int> stackElements;
     
     for (int i = 0; nums[i]; i++) {
-        if (isdigit(nums[i])){
+        if (isdigit(nums[i]))
             stackElements.push(nums[i] - '0');
-        }
         else if (nums[i] != ' ') {
             oper = nums[i];
             right =  stackElements.top();

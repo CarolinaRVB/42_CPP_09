@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/22 10:53:41 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/26 11:39:13 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,9 @@ void    merge_insert_deque(std::deque<std::deque<int> > *intMatrix, size_t start
         return ;
 
     for (unsigned long int j = start + 1; j < intMatrix->size(); j++) {
-        if ((*intMatrix)[start][1] > (*intMatrix)[j][1]) {
+        if ((*intMatrix)[start][1] > (*intMatrix)[j][1])
             std::swap((*intMatrix)[start], (*intMatrix)[j]);
-        }
-    }   
-    
+    }
     merge_insert_deque(intMatrix, start + 1);
 }
 
@@ -163,11 +161,9 @@ void    merge_insert_vector(std::vector<std::vector<int> > *intMatrix, size_t st
         return ;
 
     for (unsigned long int j = start + 1; j < intMatrix->size(); j++) {
-        if ((*intMatrix)[start][1] > (*intMatrix)[j][1]) {
+        if ((*intMatrix)[start][1] > (*intMatrix)[j][1])
             std::swap((*intMatrix)[start], (*intMatrix)[j]);
-        }
-    }   
-    
+    }
     merge_insert_vector(intMatrix, start + 1);
 }
 

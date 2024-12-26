@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 17:57:10 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/20 22:03:31 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/26 10:48:39 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ int check_set(char c, std::string set) {
     return (1);
 }
 
-int error_return(bool print, std::string msg=NULL, std::string *date=NULL) {
+int error_return(bool print, std::string msg, std::string *date) {
     if (print && date)
         std::cout << msg << *date << "\n";
     else if (print)
