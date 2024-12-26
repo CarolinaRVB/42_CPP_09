@@ -55,7 +55,7 @@ int    save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangle
 
     if (size != argc) {
         float last = ::atof((arg[size]));
-        if (last > std::numeric_limits<int>::max() || last < std::numeric_limits<int>::min())
+        if (last > std::numeric_limits<int>::max() || last == 0)
             return 1;
         (*wrangler).push_back(static_cast<int>(last));
     }
@@ -174,7 +174,7 @@ int    save_ints_vector(std::vector<std::vector<int> > *m, std::vector<int> *wra
 
     if (size != argc) {
         float last = ::atof((arg[size]));
-        if (last > std::numeric_limits<int>::max() || last < std::numeric_limits<int>::min())
+        if (last > std::numeric_limits<int>::max() || last == 0)
             return 1;
         (*wrangler).push_back(static_cast<int>(last));
     }
