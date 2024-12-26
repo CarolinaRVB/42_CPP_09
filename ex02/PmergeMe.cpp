@@ -15,6 +15,20 @@
 /*
 #########################    USING DEQUE CONTAINER    #########################
 */
+
+int duplicates_deque(std::deque<std::deque<int> > *m, int p1, int p2 = 0) {
+    int count_p1 = 0;
+    int count_p2 = 0;
+    for (size_t j = 0; j < m->size(); j++) {
+        count_p1 += std::count((*m)[j].begin(), (*m)[j].end(), p1);
+        if (p2)
+            count_p2 += std::count((*m)[j].begin(), (*m)[j].end(), p2);
+    }
+    if ((!p2 && p1 >= 1) || count_p1 > 1 || count_p2 > 1)
+        return 1;
+    return 0;
+}
+
 int    save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangler, char **arg, int argc) {
     
     int size = argc;
@@ -25,8 +39,8 @@ int    save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangle
         std::deque<int>    pair;
         float p1 = ::atof((arg[i]));
         float p2 = ::atof((arg[i + 1]));
-        if (p1 > std::numeric_limits<int>::max() || p1 < std::numeric_limits<int>::min() ||
-            p2 > std::numeric_limits<int>::max() || p2 < std::numeric_limits<int>::min())
+        if (p1 > std::numeric_limits<int>::max() || p1 == 0 ||
+            p2 > std::numeric_limits<int>::max() || p2 == 0 )
             return 1;
 
         pair.push_back(static_cast<int>(p1));
@@ -34,6 +48,9 @@ int    save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangle
         if (pair[0] > pair[1])
             std::swap(pair[0], pair[1]);
         (*m).push_back(pair);
+
+        if (duplicates_deque(m, pair[0], pair[1]))
+            return 1;
     }
 
     if (size != argc) {
@@ -44,7 +61,9 @@ int    save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangle
     }
     else
         (*wrangler).push_back(-1);
-    
+
+    if (duplicates_deque(m, (*wrangler)[0]))
+            return 1;
     return 0;    
 }
 
@@ -114,6 +133,20 @@ void    insert_item_deque(std::deque<int> *vec, std::deque<int> *pend, int val, 
 /*
 #########################    USING VECTOR CONTAINER    #########################
 */
+
+int duplicates_vector(std::vector<std::vector<int> > *m, int p1, int p2 = 0) {
+    int count_p1 = 0;
+    int count_p2 = 0;
+    for (size_t j = 0; j < m->size(); j++) {
+        count_p1 += std::count((*m)[j].begin(), (*m)[j].end(), p1);
+        if (p2)
+            count_p2 += std::count((*m)[j].begin(), (*m)[j].end(), p2);
+    }
+    if ((!p2 && p1 >= 1) || count_p1 > 1 || count_p2 > 1)
+        return 1;
+    return 0;
+}
+
 int    save_ints_vector(std::vector<std::vector<int> > *m, std::vector<int> *wrangler, char **arg, int argc) {
     
     int size = argc;
@@ -124,8 +157,8 @@ int    save_ints_vector(std::vector<std::vector<int> > *m, std::vector<int> *wra
         std::vector<int>    pair;
         float p1 = ::atof((arg[i]));
         float p2 = ::atof((arg[i + 1]));
-        if (p1 > std::numeric_limits<int>::max() || p1 < std::numeric_limits<int>::min() ||
-            p2 > std::numeric_limits<int>::max() || p2 < std::numeric_limits<int>::min())
+        if (p1 > std::numeric_limits<int>::max() || p1 == 0 ||
+            p2 > std::numeric_limits<int>::max() || p2 == 0)
             return 1;
 
         pair.push_back(static_cast<int>(p1));
@@ -133,6 +166,9 @@ int    save_ints_vector(std::vector<std::vector<int> > *m, std::vector<int> *wra
         if (pair[0] > pair[1])
             std::swap(pair[0], pair[1]);
         (*m).push_back(pair);
+
+        if (duplicates_vector(m, pair[0], pair[1]))
+            return 1;
     }
 
     if (size != argc) {
@@ -143,7 +179,8 @@ int    save_ints_vector(std::vector<std::vector<int> > *m, std::vector<int> *wra
     }
     else
         (*wrangler).push_back(-1);
-    
+    if (duplicates_vector(m, (*wrangler)[0]))
+        return 1;
     return 0;    
 }
 

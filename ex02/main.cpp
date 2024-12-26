@@ -19,6 +19,7 @@ int invalid_input(char **arg) {
                 return 1;
         }
     }
+
     return 0;
 }
 

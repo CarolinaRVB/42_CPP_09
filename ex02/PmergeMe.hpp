@@ -36,6 +36,7 @@ The order in which elements are inserted into the sorted subset.
 */
 
 // DEQUE functions:
+int     duplicates_deque(std::deque<std::deque<int> > *m, int p1, int p2 = 0);
 int     save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangler, char **arg, int argc);
 void    merge_insert_deque(std::deque<std::deque<int> > *intMatrix, size_t start = 0);
 void    jacobsthal_insert_deque(std::deque<std::deque<int> > *intMatrix, std::deque<int> *jacobsthal, std::deque<int> *sequence, std::deque<int> *pend);
@@ -43,6 +44,7 @@ void    create_jacobsthall_sequence_deque(unsigned long int size, std::deque<int
 void    insert_item_deque(std::deque<int> *vec, std::deque<int> *pend, int val, int i);
 
 // VECTOR functions:
+int     duplicates_vector(std::vector<std::vector<int> > *m, int p1, int p2 = 0);
 int     save_ints_vector(std::vector<std::vector<int> > *m, std::vector<int> *wrangler, char **arg, int argc);
 void    merge_insert_vector(std::vector<std::vector<int> > *intMatrix, size_t start = 0);
 void    jacobsthal_insert_vector(std::vector<std::vector<int> > *intMatrix, std::vector<int> *jacobsthal, std::vector<int> *sequence, std::vector<int> *pend);
