@@ -143,7 +143,7 @@ int duplicates_vector(std::vector<std::vector<int> > *m, int p1, int p2) {
             count_p2 += std::count((*m)[j].begin(), (*m)[j].end(), p2);
     }
     
-    if ((!p2 && count_p1 > 1) || count_p1 > 1 || count_p2 > 1)
+    if ((!p2 && count_p1 >= 1) || count_p1 > 1 || count_p2 > 1)
         return 1;
     return 0;
 }
