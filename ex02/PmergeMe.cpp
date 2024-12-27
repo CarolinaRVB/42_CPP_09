@@ -6,7 +6,7 @@
 /*   By: crebelo- <crebelo-@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 14:37:42 by crebelo-          #+#    #+#             */
-/*   Updated: 2024/12/26 11:39:13 by crebelo-         ###   ########.fr       */
+/*   Updated: 2024/12/27 15:36:00 by crebelo-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int duplicates_deque(std::deque<std::deque<int> > *m, int p1, int p2) {
 }
 
 int    save_ints_deque(std::deque<std::deque<int> > *m, std::deque<int> *wrangler, char **arg, int argc) {
-    
+    if (argc == 2)
+        return 1;
     int size = argc;
     if (argc % 2 == 0)
         size = argc - 1;
@@ -150,6 +151,8 @@ int duplicates_vector(std::vector<std::vector<int> > *m, int p1, int p2) {
 
 int    save_ints_vector(std::vector<std::vector<int> > *m, std::vector<int> *wrangler, char **arg, int argc) {
     
+    if (argc == 2)
+        return 1;
     int size = argc;
     if (argc % 2 == 0)
         size = argc - 1;
